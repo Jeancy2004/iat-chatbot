@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IAT Networks Chatbot</title>
+
+<style>
+
+/* 🌈 Animated Background */
+body{
+margin:0;
+font-family:Arial;
+height:100vh;
+overflow:hidden;
+background: linear-gradient(-45deg,#0066ff,#7b2cff,#00c6ff,#f0f4ff);
+background-size: 400% 400%;
+animation: bg 10s ease infinite;
+position:relative;
+}
+
+@keyframes bg{
+0%{background-position:0% 50%;}
+50%{background-position:100% 50%;}
+100%{background-position:0% 50%;}
+}
+
+/* 🏢 BRAND */
+.brand{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+text-align:center;
+color:white;
+opacity:0.12;
+pointer-events:none;
+}
+
+.brand h1{font-size:60px;}
+.brand p{font-size:14px;}
+
+/* 💬 FLOAT BUTTON */
+.chat-toggle{
+position:fixed;
+bottom:20px;
+right:20px;
+width:60px;
+height:60px;
+border-radius:50%;
+background:rgba(255,255,255,0.25);
+backdrop-filter:blur(10px);
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:26px;
+cursor:pointer;
+z-index:10;
+}
+
+/* 💎 CHAT BOX */
+.chatbot{
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+width:370px;
+height:600px;
+display:none;
+flex-direction:column;
+border-radius:20px;
+overflow:hidden;
+background:rgba(255,255,255,0.15);
+backdrop-filter:blur(20px);
+box-shadow:0 25px 60px rgba(0,0,0,0.3);
+z-index:10;
+}
+
+/* HEADER */
+.chat-header{
+padding:12px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:rgba(255,255,255,0.2);
+color:white;
+}
+
+/* CHAT AREA */
+.chat-area{
+flex:1;
+padding:12px;
+overflow-y:auto;
+}
+
+/* MESSAGE */
+.message{
+margin:8px 0;
+padding:10px 12px;
+border-radius:14px;
+max-width:80%;
+font-size:14px;
+animation:fade 0.2s ease;
+}
+
+@keyframes fade{
+from{opacity:0;transform:translateY(6px);}
+to{opacity:1;transform:translateY(0);}
+}
+
+.user{
+background:#0066ff;
+color:white;
+margin-left:auto;
+}
+
+.bot{
+background:rgba(255,255,255,0.9);
+color:#222;
+}
+
+/* QUICK */
+.quick{
+display:flex;
+flex-wrap:wrap;
+gap:6px;
+padding:8px;
+}
+
+.quick button{
+padding:6px 10px;
+border:none;
+border-radius:20px;
+background:rgba(255,255,255,0.85);
+font-size:12px;
+cursor:pointer;
+}
+
+/* INPUT */
+.input-area{
+display:flex;
+padding:10px;
+background:rgba(255,255,255,0.2);
+}
+
+.input-area input{
+flex:1;
+padding:10px;
+border:none;
+border-radius:10px;
+outline:none;
+}
+
+.input-area button{
+margin-left:6px;
+padding:10px 12px;
+border:none;
+border-radius:10px;
+background:#0066ff;
+color:white;
+cursor:pointer;
+}
+
+/* 🎤 VOICE BOTTOM BAR */
+.voice-bar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:10px;
+background:rgba(255,255,255,0.15);
+backdrop-filter:blur(10px);
+}
+
+.voice-bar button{
+background:rgba(255,255,255,0.3);
+border:none;
+padding:6px 12px;
+border-radius:8px;
+color:white;
+cursor:pointer;
+}
+
+/* ✅ ONLY FIX ADDED (IMPORTANT) */
+.chatbot.show{
+display:flex;
+flex-direction:column;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- 🏢 BRAND -->
+<div class="brand">
+<h1>IAT Networks</h1>
+<p>Smart IT • BPO • Recruitment Solutions</p>
+</div>
+
+<!-- 💬 FLOAT BUTTON -->
+<div class="chat-toggle" onclick="toggleChat()">💬</div>
+
+<!-- CHAT -->
+<div class="chatbot" id="chatbot">
+
+<!-- HEADER -->
+<div class="chat-header">
+
+<div style="display:flex;align-items:center;gap:10px;">
+
+<div style="width:40px;height:40px;border-radius:50%;
+background:rgba(255,255,255,0.2);
+display:flex;align-items:center;justify-content:center;
+font-size:20px;">
+🤖
+</div>
+
+<div>
+<b>IAT Networks · Assistant</b><br>
+<small>Demo • FAQ from public content-not an offical channel</small>
+</div>
+
+</div>
+
+<button onclick="clearChat()"
+style="background:rgba(255,255,255,0.3);
+border:none;padding:6px 10px;
+border-radius:8px;color:white;cursor:pointer;">
+Clear
+</button>
+
+</div>
+
+<!-- QUICK -->
+<div class="quick">
+<button onclick="quick('services')">Services</button>
+<button onclick="quick('internship')">Internship</button>
+<button onclick="quick('contact')">Contact</button>
+<button onclick="quick('location')">Location</button>
+</div>
+
+<!-- CHAT AREA -->
+<div class="chat-area" id="chatArea">
+
+<div class="message bot">👋 Hi! How can I help you?</div>
+
+</div>
+
+<!-- INPUT -->
+<div class="input-area">
+<input type="text" id="userInput" placeholder="Ask me anything...">
+<button onclick="sendMessage()">Send</button>
+</div>
+
+<!-- VOICE -->
+<div class="voice-bar">
+
+<div style="font-size:12px;color:#fff;">
+🎤 Voice Assistant
+</div>
+
+<button id="voiceBtn" onclick="toggleVoice()">🔊 OFF</button>
+
+</div>
+
+</div>
+
+<script>
+
+let voiceEnabled=false;
+
+/* ✅ ONLY FIXED FUNCTION */
+function toggleChat(){
+document.getElementById("chatbot").classList.toggle("show");
+}
+
+/* QUICK */
+function quick(t){
+document.getElementById("userInput").value=t;
+sendMessage();
+}
+
+/* CLEAR */
+function clearChat(){
+document.getElementById("chatArea").innerHTML=
+`<div class="message bot">👋 Chat cleared!</div>`;
+}
+
+/* VOICE */
+function toggleVoice(){
+voiceEnabled=!voiceEnabled;
+document.getElementById("voiceBtn").innerText=
+voiceEnabled?"🔊 ON":"🔊 OFF";
+}
+
+/* SPEAK */
+function speak(text){
+if(!voiceEnabled) return;
+let msg=new SpeechSynthesisUtterance(text);
+window.speechSynthesis.speak(msg);
+}
+
+/* BOT */
+function getReply(t){
+t=t.toLowerCase();
+
+if(t.includes("hi") || t.includes("hello"))
+return `Hello! I’m a sample assistant for IAT Networks. I can explain their services (BPO, digital marketing, recruitment), staffing models, or how to get in touch. What would you like to know?`;
+
+if(t.includes("services"))
+return `IAT Networks provides BPO and customer support, digital marketing, and recruitment solutions, along with workforce services — described on their site as comprehensive BPO, IT, and workforce solutions for businesses globally.
+Source: iatnetworks.com.`;
+
+if(t.includes("internship"))
+return "🎓 Internship available in Web Dev, Marketing, Support.";
+
+if(t.includes("contact"))
+return `From their website:
+<br>
+• Email(resumes/HR):hr@iatnetworks.com
+<br>
+• Phone: +91 73588 34638
+<br>
+You can also use their Contact page on iatnetworks.com.`;
+
+if(t.includes("location"))
+return `They market themselves as a consulting and services company based in Vellore, Tamil Nadu, serving clients across industries.
+
+Use their Contact page for the exact address or appointment details.`;
+
+if(t.includes("bpo"))
+return `IAT Networks provides BPO and customer support, digital marketing, and recruitment solutions, along with workforce services — described on their site as comprehensive BPO, IT, and workforce solutions for businesses globally.
+
+Source: iatnetworks.com.`;
+
+if(t.includes("digital marketing"))
+return `Their digital marketing offering is positioned as end-to-end: brand growth online using creativity, analytics, and current tools.
+
+For specifics and engagement, it’s best to contact them directly.`;
+
+if(t.includes("recruitment"))
+return `I’m a simple demo bot with answers based on public content from iatnetworks.com.
+
+Try asking about services, recruitment, RPO, permanent staffing, location (Vellore), or contact (hr@iatnetworks.com / +91 73588 34638).
+
+For anything specific, their team can help directly.`;
+
+return "Hello! I can help with services, internship, contact or location.";
+}
+
+/* SEND */
+function sendMessage(){
+
+let input=document.getElementById("userInput");
+let text=input.value;
+if(text.trim()==="") return;
+
+let chat=document.getElementById("chatArea");
+
+chat.innerHTML+=`<div class="message user">${text}</div>`;
+
+chat.innerHTML+=`<div class="message bot" id="typing">⌛ Typing...</div>`;
+
+setTimeout(()=>{
+
+document.getElementById("typing").remove();
+
+let reply=getReply(text);
+
+chat.innerHTML+=`<div class="message bot">${reply}</div>`;
+
+speak(reply);
+
+chat.scrollTo({top:chat.scrollHeight,behavior:"smooth"});
+
+},600);
+
+input.value="";
+}
+
+/* ENTER */
+document.getElementById("userInput")
+.addEventListener("keypress",(e)=>{
+if(e.key==="Enter") sendMessage();
+});
+
+</script>
+
+</body>
+</html>
