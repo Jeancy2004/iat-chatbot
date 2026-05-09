@@ -240,32 +240,106 @@ cursor:pointer;
 /* 📱 MOBILE */
 @media(max-width:768px){
 
-.chatbot{
-width:95%;
-height:92vh;
+body{
+overflow:hidden;
 }
 
+/* CHATBOT */
+.chatbot{
+width:96%;
+height:92vh;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%) scale(0.9);
+border-radius:18px;
+}
+
+/* WHEN OPEN */
+.chatbot.show{
+transform:translate(-50%,-50%) scale(1);
+}
+
+/* BRAND */
 .brand h1{
-font-size:36px;
+font-size:34px;
 }
 
 .brand p{
 font-size:12px;
 }
 
+/* FLOAT BUTTON */
 .chat-toggle{
-width:64px;
-height:64px;
+width:62px;
+height:62px;
+bottom:18px;
+right:18px;
 }
 
 .chat-icon{
-width:50px;
-height:50px;
+width:48px;
+height:48px;
 font-size:24px;
 }
 
+/* HEADER */
+.chat-header{
+padding:10px;
 }
 
+.chat-header small{
+font-size:10px;
+}
+
+/* CHAT */
+.chat-area{
+padding:10px;
+}
+
+/* MESSAGE */
+.message{
+font-size:13px;
+max-width:88%;
+}
+
+/* QUICK BUTTONS */
+.quick{
+padding:6px;
+gap:5px;
+}
+
+.quick button{
+font-size:11px;
+padding:6px 9px;
+}
+
+/* INPUT */
+.input-area{
+padding:8px;
+}
+
+.input-area input{
+font-size:16px;
+padding:11px;
+}
+
+.input-area button{
+padding:10px 12px;
+font-size:13px;
+}
+
+/* VOICE BAR */
+.voice-bar{
+padding:8px 10px;
+font-size:11px;
+}
+
+.voice-bar button{
+padding:5px 10px;
+font-size:11px;
+}
+
+}
 </style>
 </head>
 
