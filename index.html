@@ -108,20 +108,12 @@ font-size:24px;
 
 /* 💎 CHAT BOX */
 .chatbot{
-position:fixed;
+width:95%;
+height:92vh;
 top:50%;
 left:50%;
 transform:translate(-50%,-50%);
-width:370px;
-height:600px;
-display:none;
-flex-direction:column;
 border-radius:20px;
-overflow:hidden;
-background:rgba(255,255,255,0.15);
-backdrop-filter:blur(20px);
-box-shadow:0 25px 60px rgba(0,0,0,0.3);
-z-index:10;
 }
 
 /* HEADER */
@@ -299,8 +291,6 @@ class="robot-icon">
 
 </div>
 
-
-</div>
 <!-- CHAT -->
 <div class="chatbot" id="chatbot">
 
@@ -372,7 +362,16 @@ let voiceEnabled=false;
 
 /* ✅ ONLY FIXED FUNCTION */
 function toggleChat(){
-document.getElementById("chatbot").classList.toggle("show");
+
+let chatbot=document.getElementById("chatbot");
+
+if(chatbot.classList.contains("show")){
+chatbot.classList.remove("show");
+}
+else{
+chatbot.classList.add("show");
+}
+
 }
 
 /* QUICK */
