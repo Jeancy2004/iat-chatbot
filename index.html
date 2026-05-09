@@ -40,22 +40,79 @@ pointer-events:none;
 .brand h1{font-size:60px;}
 .brand p{font-size:14px;}
 
-/* 💬 FLOAT BUTTON */
+/* 💬 MODERN FLOAT BUTTON */
 .chat-toggle{
 position:fixed;
 bottom:20px;
 right:20px;
-width:60px;
-height:60px;
+width:70px;
+height:70px;
 border-radius:50%;
-background:rgba(255,255,255,0.25);
+background:linear-gradient(135deg,#0066ff,#7b2cff);
+display:flex;
+align-items:center;
+justify-content:center;
+cursor:pointer;
+z-index:999;
+box-shadow:0 10px 30px rgba(0,0,0,0.35);
+animation:float 3s ease-in-out infinite;
+transition:0.3s;
+padding:0;
+overflow:hidden;
+}
+.robot-icon{
+width:52px;
+height:52px;
+object-fit:contain;
+animation:floatbot 2s ease-in-out infinite;
+display:block;
+}
+
+/* INNER GLASS */
+.chat-icon{
+width:56px;
+height:56px;
+border-radius:50%;
+background:rgba(255,255,255,0.15);
 backdrop-filter:blur(10px);
 display:flex;
 align-items:center;
 justify-content:center;
-font-size:26px;
-cursor:pointer;
-z-index:10;
+font-size:30px;
+color:white;
+}
+
+/* HOVER */
+.chat-toggle:hover{
+transform:scale(1.08);
+}
+
+/* FLOAT */
+@keyframes float{
+0%{transform:translateY(0);}
+50%{transform:translateY(-5px);}
+100%{transform:translateY(0);}
+}
+
+/* MOBILE */
+@media(max-width:768px){
+
+.chatbot{
+width:95%;
+height:92vh;
+}
+
+.chat-toggle{
+width:64px;
+height:64px;
+}
+
+.chat-icon{
+width:50px;
+height:50px;
+font-size:24px;
+}
+
 }
 
 /* 💎 CHAT BOX */
@@ -186,6 +243,53 @@ display:flex;
 flex-direction:column;
 }
 
+/* 📱 FULL MOBILE OPTIMIZATION */
+@media(max-width:768px){
+
+body{
+overflow:hidden;
+}
+
+.chatbot{
+width:100%;
+height:100vh;
+top:0;
+left:0;
+transform:none;
+border-radius:0;
+}
+
+.chat-area{
+padding-bottom:20px;
+}
+
+.brand h1{
+font-size:34px;
+}
+
+.brand p{
+font-size:12px;
+}
+
+.input-area input{
+font-size:16px;
+}
+
+}
+/* 🤖 ROBOT ICON */
+.robot-icon{
+width:42px;
+height:42px;
+object-fit:contain;
+animation:floatbot 2s ease-in-out infinite;
+}
+
+/* FLOAT EFFECT */
+@keyframes floatbot{
+0%{transform:translateY(0);}
+50%{transform:translateY(-4px);}
+100%{transform:translateY(0);}
+}
 </style>
 </head>
 
@@ -196,10 +300,16 @@ flex-direction:column;
 <h1>IAT Networks</h1>
 <p>Smart IT • BPO • Recruitment Solutions</p>
 </div>
-
 <!-- 💬 FLOAT BUTTON -->
-<div class="chat-toggle" onclick="toggleChat()">💬</div>
+<div class="chat-toggle" onclick="toggleChat()">
 
+<img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png"
+class="robot-icon">
+
+</div>
+
+
+</div>
 <!-- CHAT -->
 <div class="chatbot" id="chatbot">
 
@@ -217,7 +327,7 @@ font-size:20px;">
 
 <div>
 <b>IAT Networks · Assistant</b><br>
-<small>Demo • FAQ from public content-not an offical channel</small>
+<small>Demo • FAQ from public content-not an official channel</small>
 </div>
 
 </div>
@@ -345,7 +455,10 @@ Try asking about services, recruitment, RPO, permanent staffing, location (Vello
 
 For anything specific, their team can help directly.`;
 
-return "Hello! I can help with services, internship, contact or location.";
+if (t.includes("permanent staffing"))
+return `Permanent staffing means hiring candidates for full-time, long-term positions as direct employees of the client company. Employees typically receive salary, company benefits, paid leave, and other perks according to the employer’s policies.`;
+
+return "I’m a simple demo bot with answers based on public content from iatnetworks.com. Try asking about services, recruitment, RPO, permanent staffing, location (Vellore), or contact (hr@iatnetworks.com / +91 73588 34638). For anything specific, their team can help directly.";
 }
 
 /* SEND */
