@@ -414,7 +414,7 @@ window.speechSynthesis.speak(msg);
 function getReply(t){
 t=t.toLowerCase();
 
-if(t.includes("hi") || t.includes("hello"))
+if(t === "hi" || t === "hello")
 return `Hello! I’m a sample assistant for IAT Networks. I can explain their services (BPO, digital marketing, recruitment), staffing models, or how to get in touch. What would you like to know?`;
 
 if(t.includes("services"))
