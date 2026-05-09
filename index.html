@@ -504,7 +504,11 @@ function getReply(t){
 t=t.toLowerCase();
 
 /* HI */
-if(t.includes("hi") || t.includes("hello"))
+if(
+t.trim() === "hi" ||
+t.trim() === "hello" ||
+t.trim() === "hey"
+)
 return `Hello! I’m a sample assistant for IAT Networks. I can explain their services (BPO, digital marketing, recruitment), staffing models, or how to get in touch. What would you like to know?`;
 
 /* SERVICES */
@@ -514,17 +518,29 @@ return `IAT Networks provides BPO and customer support, digital marketing, and r
 Source: iatnetworks.com.`;
 
 /* INTERNSHIP */
-if(t.includes("internship"))
-return `🎓 Internship available in Web Dev, Marketing, Support.`;
+if(
+t.includes("internship") ||
+t.includes("intern") ||
+t.includes("training")
+)
+
+return `🎓 Internship opportunities are available in:
+
+• Web Development
+• Digital Marketing
+• Technical Support
+• Software Development
+
+Students can gain real-time industry experience and practical skills.`;
 
 /* CONTACT */
 if(t.includes("contact"))
 return `From their website:
-
+<br>
 • Email (resumes / HR): hr@iatnetworks.com
-
+<br>
 • Phone: +91 73588 34638
-
+<br>
 You can also use their Contact page on iatnetworks.com.`;
 
 /* LOCATION */
@@ -547,15 +563,20 @@ For specifics and engagement, it’s best to contact them directly.`;
 
 /* RECRUITMENT */
 if(t.includes("recruitment"))
-return `I’m a simple demo bot with answers based on public content from iatnetworks.com.
+return `For careers and resumes, their public contact is hr@iatnetworks.com.
 
-Try asking about services, recruitment, RPO, permanent staffing, location (Vellore), or contact (hr@iatnetworks.com / +91 73588 34638).
-
-For anything specific, their team can help directly.`;
-
+They highlight recruitment in Vellore and connecting organisations with skilled professionals.`;
 /* STAFFING */
 if(t.includes("permanent staffing"))
 return `Permanent staffing means hiring candidates for full-time, long-term positions as direct employees of the client company.`;
+
+/* RPO */
+if(
+t.includes("rpo") ||
+t.includes("recruitment process outsourcing")
+)
+
+return `Recruitment Process Outsourcing (RPO) is when a company moves all or part of its hiring process to an external recruitment partner — IAT Networks describes offering this model on their website.`;
 
 /* DEFAULT */
 return `Hello! I can help with services, internship, contact or location.`;
