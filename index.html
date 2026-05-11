@@ -134,6 +134,7 @@ flex:1;
 padding:12px;
 overflow-y:auto;
 scroll-behavior:smooth;
+background:rgba(255,255,255,0.05);
 }
 
 /* MESSAGE */
@@ -146,6 +147,7 @@ font-size:14px;
 line-height:1.5;
 animation:fade 0.2s ease;
 word-wrap:break-word;
+backdrop-filter:blur(6px);
 }
 
 @keyframes fade{
@@ -189,6 +191,8 @@ transition:0.2s;
 }
 
 .quick button:hover{
+background:#0066ff;
+color:white;
 transform:scale(1.05);
 }
 
@@ -206,6 +210,7 @@ border:none;
 border-radius:10px;
 outline:none;
 font-size:14px;
+background:white;
 }
 
 .input-area button{
@@ -240,11 +245,6 @@ cursor:pointer;
 /* 📱 MOBILE */
 @media(max-width:768px){
 
-body{
-overflow:hidden;
-}
-
-/* CHATBOT */
 .chatbot{
 width:96%;
 height:92vh;
@@ -254,12 +254,10 @@ transform:translate(-50%,-50%) scale(0.9);
 border-radius:18px;
 }
 
-/* WHEN OPEN */
 .chatbot.show{
 transform:translate(-50%,-50%) scale(1);
 }
 
-/* BRAND */
 .brand h1{
 font-size:34px;
 }
@@ -268,7 +266,6 @@ font-size:34px;
 font-size:12px;
 }
 
-/* FLOAT BUTTON */
 .chat-toggle{
 width:62px;
 height:62px;
@@ -282,30 +279,13 @@ height:48px;
 font-size:24px;
 }
 
-/* HEADER */
-.chat-header{
-padding:10px;
-}
-
 .chat-header small{
 font-size:10px;
 }
 
-/* CHAT */
-.chat-area{
-padding:10px;
-}
-
-/* MESSAGE */
 .message{
 font-size:13px;
 max-width:88%;
-}
-
-/* QUICK BUTTONS */
-.quick{
-padding:6px;
-gap:5px;
 }
 
 .quick button{
@@ -313,33 +293,13 @@ font-size:11px;
 padding:6px 9px;
 }
 
-/* INPUT */
-.input-area{
-padding:8px;
-}
-
 .input-area input{
 font-size:16px;
 padding:11px;
 }
 
-.input-area button{
-padding:10px 12px;
-font-size:13px;
 }
 
-/* VOICE BAR */
-.voice-bar{
-padding:8px 10px;
-font-size:11px;
-}
-
-.voice-bar button{
-padding:5px 10px;
-font-size:11px;
-}
-
-}
 </style>
 </head>
 
@@ -353,11 +313,7 @@ font-size:11px;
 
 <!-- 💬 FLOAT BUTTON -->
 <div class="chat-toggle" onclick="toggleChat()">
-
-<div class="chat-icon">
-💬
-</div>
-
+<div class="chat-icon">💬</div>
 </div>
 
 <!-- 🤖 CHATBOT -->
@@ -382,7 +338,7 @@ font-size:20px;">
 
 <div>
 <b>IAT Networks · Assistant</b><br>
-<small>Demo • FAQ from public content — not an official channel</small>
+<small>Demo • FAQs based on public information — not an official channel</small>
 </div>
 
 </div>
@@ -412,7 +368,7 @@ Clear
 <div class="chat-area" id="chatArea">
 
 <div class="message bot">
-👋 Hi! How can I help you?
+👋 Hi! How can I help you today?
 </div>
 
 </div>
@@ -423,7 +379,7 @@ Clear
 <input
 type="text"
 id="userInput"
-placeholder="Ask me anything..."
+placeholder="Ask about services, internships, contact..."
 >
 
 <button onclick="sendMessage()">
@@ -451,7 +407,17 @@ Send
 
 let voiceEnabled=false;
 
-/* ✅ TOGGLE CHAT */
+/* NORMALIZE */
+function normalizeText(text){
+
+return text
+.toLowerCase()
+.replace(/[^\w\s]/gi,"")
+.trim();
+
+}
+
+/* TOGGLE CHAT */
 function toggleChat(){
 
 let chatbot=document.getElementById("chatbot");
@@ -473,7 +439,7 @@ sendMessage();
 function clearChat(){
 
 document.getElementById("chatArea").innerHTML=
-`<div class="message bot">👋 Chat cleared!</div>`;
+`<div class="message bot">🧹 Chat cleared successfully!</div>`;
 
 }
 
@@ -498,76 +464,96 @@ window.speechSynthesis.speak(msg);
 
 }
 
-/* BOT */
+/* BOT REPLY */
 function getReply(t){
 
-t=t.toLowerCase();
+t=normalizeText(t);
 
 /* HI */
 if(
-t.trim() === "hi" ||
-t.trim() === "hello" ||
-t.trim() === "hey"
+t==="hi" ||
+t==="hello" ||
+t==="hey"
 )
-return `Hello! I’m a sample assistant for IAT Networks. I can explain their services (BPO, digital marketing, recruitment), staffing models, or how to get in touch. What would you like to know?`;
+
+return `Hello! I’m a sample assistant for IAT Networks. I can explain services, internships, recruitment, staffing models, or contact details.`;
 
 /* SERVICES */
-if(t.includes("services"))
-return `IAT Networks provides BPO and customer support, digital marketing, and recruitment solutions, along with workforce services — described on their site as comprehensive BPO, IT, and workforce solutions for businesses globally.
+if(
+t.includes("service") ||
+t.includes("services") ||
+t.includes("bpo")
+)
+
+return `IAT Networks provides BPO and customer support, digital marketing, recruitment solutions, and workforce services.
+
+Their website describes them as offering comprehensive BPO, IT, and workforce solutions for businesses globally.
 
 Source: iatnetworks.com.`;
 
 /* INTERNSHIP */
 if(
 t.includes("internship") ||
+t.includes("internships") ||
 t.includes("intern") ||
 t.includes("training")
 )
 
 return `🎓 Internship opportunities are available in:
-
-• Web Development
-• Digital Marketing
-• Technical Support
+<br>
+• Web Development<br>
+• Digital Marketing<br>
+• Technical Support<br>
 • Software Development
-
+<br>
 Students can gain real-time industry experience and practical skills.`;
 
 /* CONTACT */
-if(t.includes("contact"))
-return `From their website:
-<br>
-• Email (resumes / HR): hr@iatnetworks.com
-<br>
-• Phone: +91 73588 34638
-<br>
-You can also use their Contact page on iatnetworks.com.`;
+if(
+t.includes("contact") ||
+t.includes("phone") ||
+t.includes("email")
+)
+
+return `📩 Contact Information:
+
+• Email (Resumes / HR): hr@iatnetworks.com<br>
+• Phone: +91 73588 34638<br>
+
+You can also use the Contact page on iatnetworks.com.`;
 
 /* LOCATION */
-if(t.includes("location"))
-return `They market themselves as a consulting and services company based in Vellore, Tamil Nadu, serving clients across industries.
+if(
+t.includes("location") ||
+t.includes("vellore") ||
+t.includes("address")
+)
+
+return `📍 Location:
+
+They describe themselves as a consulting and services company based in Vellore, Tamil Nadu, serving clients across various industries.
 
 Use their Contact page for the exact address or appointment details.`;
 
-/* BPO */
-if(t.includes("bpo"))
-return `IAT Networks provides BPO and customer support, digital marketing, and recruitment solutions, along with workforce services — described on their site as comprehensive BPO, IT, and workforce solutions for businesses globally.
-
-Source: iatnetworks.com.`;
-
-/* DIGITAL */
+/* DIGITAL MARKETING */
 if(t.includes("digital marketing"))
-return `Their digital marketing offering is positioned as end-to-end: brand growth online using creativity, analytics, and current tools.
 
-For specifics and engagement, it’s best to contact them directly.`;
+return `Their digital marketing services focus on online brand growth using creativity, analytics, and modern tools.`;
 
 /* RECRUITMENT */
 if(t.includes("recruitment"))
+
 return `For careers and resumes, their public contact is hr@iatnetworks.com.
 
 They highlight recruitment in Vellore and connecting organisations with skilled professionals.`;
-/* STAFFING */
-if(t.includes("permanent staffing"))
+
+/* PERMANENT STAFFING */
+if(
+t.includes("permanent staffing") ||
+t.includes("permanent staff") ||
+t.includes("staffing")
+)
+
 return `Permanent staffing means hiring candidates for full-time, long-term positions as direct employees of the client company.`;
 
 /* RPO */
@@ -576,10 +562,17 @@ t.includes("rpo") ||
 t.includes("recruitment process outsourcing")
 )
 
-return `Recruitment Process Outsourcing (RPO) is when a company moves all or part of its hiring process to an external recruitment partner — IAT Networks describes offering this model on their website.`;
+return `Recruitment Process Outsourcing (RPO) is when a company moves all or part of its hiring process to an external recruitment partner.`;
 
 /* DEFAULT */
-return `Hello! I can help with services, internship, contact or location.`;
+return `👋 I can help with:
+
+• Services
+• Internship
+• Contact
+• Location
+
+Try asking something!`;
 
 }
 
@@ -594,14 +587,14 @@ if(text.trim()==="") return;
 
 let chat=document.getElementById("chatArea");
 
-/* USER */
+/* USER MESSAGE */
 chat.innerHTML+=`
 <div class="message user">${text}</div>
 `;
 
 /* TYPING */
 chat.innerHTML+=`
-<div class="message bot" id="typing">⌛ Typing...</div>
+<div class="message bot" id="typing">🤖 Typing...</div>
 `;
 
 chat.scrollTop=chat.scrollHeight;
@@ -612,7 +605,7 @@ document.getElementById("typing").remove();
 
 let reply=getReply(text);
 
-/* BOT */
+/* BOT MESSAGE */
 chat.innerHTML+=`
 <div class="message bot">${reply}</div>
 `;
@@ -627,7 +620,7 @@ input.value="";
 
 }
 
-/* ENTER */
+/* ENTER KEY */
 document.getElementById("userInput")
 .addEventListener("keypress",(e)=>{
 
