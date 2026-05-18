@@ -405,7 +405,91 @@ Send
 
 <script>
 
-let voiceEnabled=false;
+/* 🎤 VOICE ASSISTANT */
+
+let voiceEnabled = false;
+
+const SpeechRecognition =
+window.SpeechRecognition ||
+window.webkitSpeechRecognition;
+
+const recognition = new SpeechRecognition();
+
+recognition.lang = "en-US";
+recognition.continuous = true;
+recognition.interimResults = false;
+
+/* TOGGLE VOICE */
+function toggleVoice(){
+
+voiceEnabled = !voiceEnabled;
+
+let btn = document.getElementById("voiceBtn");
+
+if(voiceEnabled){
+
+btn.innerText = "🎤 ON";
+
+recognition.start();
+
+speak("Voice assistant activated");
+
+}else{
+
+btn.innerText = "🔊 OFF";
+
+recognition.stop();
+
+}
+
+}
+
+/* USER SPEAK */
+recognition.onresult = function(event){
+
+let transcript =
+event.results[event.results.length - 1][0].transcript;
+
+document.getElementById("userInput").value =
+transcript;
+
+sendMessage();
+
+};
+
+/* BOT SPEAK */
+function speak(text){
+
+if(!voiceEnabled) return;
+
+let msg = new SpeechSynthesisUtterance();
+
+msg.text = text.replace(/<br>/g," ");
+
+msg.lang = "en-US";
+msg.rate = 1;
+
+window.speechSynthesis.speak(msg);
+
+}
+
+/* AUTO RESTART */
+recognition.onend = function(){
+
+if(voiceEnabled){
+
+recognition.start();
+
+}
+
+};
+
+/* ERROR */
+recognition.onerror = function(event){
+
+console.log(event.error);
+
+};
 
 /* NORMALIZE */
 function normalizeText(text){
@@ -440,27 +524,6 @@ function clearChat(){
 
 document.getElementById("chatArea").innerHTML=
 `<div class="message bot">🧹 Chat cleared successfully!</div>`;
-
-}
-
-/* VOICE */
-function toggleVoice(){
-
-voiceEnabled=!voiceEnabled;
-
-document.getElementById("voiceBtn").innerText=
-voiceEnabled ? "🔊 ON" : "🔊 OFF";
-
-}
-
-/* SPEAK */
-function speak(text){
-
-if(!voiceEnabled) return;
-
-let msg=new SpeechSynthesisUtterance(text);
-
-window.speechSynthesis.speak(msg);
 
 }
 
@@ -609,8 +672,6 @@ let reply=getReply(text);
 chat.innerHTML+=`
 <div class="message bot">${reply}</div>
 `;
-
-speak(reply);
 
 chat.scrollTop=chat.scrollHeight;
 
